@@ -102,27 +102,31 @@ def get_cold_pitch(players,sport):
 
 # Loop through the teams list, find all their players, and then find the cold ones
 
-selftext="#COLD \n"  
+selftext=""  
     
 for t,s in teams.items():
     current_team = get_team(t)
-    selftext = selftext + "###" + current_team + "\n\n"
-    selftext = selftext + "\n\n"
-    selftext = selftext + "Name | PA | H | HR | RBI | AVG | OPS" + "\n"
-    selftext = selftext + "-----|-----|-----|-----|-----|-----|-----" + "\n"
-   
     hitters = get_hitters(t)
     pitchers=get_pitchers(t)
-
     cold_hit= get_cold_hit(hitters,s)
     cold_pit= get_cold_pitch(pitchers,s)
+    selftext = selftext + "###" + current_team + "\n\n"
+    selftext = selftext + "\n\n"
+    if len(cold_hit) > 0:
+      selftext = selftext + "Name | PA | H | HR | RBI | AVG | OPS" + "\n"
+      selftext = selftext + "-----|-----|-----|-----|-----|-----|-----" + "\n"
+   
+
+
+
   
     for h in cold_hit:
         selftext = selftext + h + "|" + str(cold_hit[h]['pa']) + "|" + str(cold_hit[h]['hits']) + "|" + str(cold_hit[h]['hr']) + "|" + str(cold_hit[h]['rbi']) + "|" + str(cold_hit[h]['avg']) + "|" + str(cold_hit[h]['ops']) + "\n"
 
     selftext = selftext + "\n\n"
-    selftext = selftext + "Name | IP | ERA | WHIP | K/9" + "\n"
-    selftext = selftext + "-----|-----|-----|-----|-----" + "\n"
+    if len(cold_pit) > 0:
+        selftext = selftext + "Name | IP | ERA | WHIP | K/9" + "\n"
+        selftext = selftext + "-----|-----|-----|-----|-----" + "\n"
 
     for p in cold_pit:
         selftext = selftext + p +  "|" + str(cold_pit[p]['ip']) +  "|" + str(cold_pit[p]['era']) +  "|" + str(cold_pit[p]['whip']) +  "|" + str(cold_pit[p]['k9']) +  "\n"
