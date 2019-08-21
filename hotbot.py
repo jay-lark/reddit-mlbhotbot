@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 
-import statsapi
+#import statsapi 
 import json
 import requests
-from pprint import pprint
 import praw
 import datetime
 
+#Get the date, we'll track hitters for the last 7 days and pitchers for the last 11
 now = datetime.datetime.now()
 end_date = now.strftime("%m/%d/%Y")
 hitter_start = datetime.datetime.now()- datetime.timedelta(days=7)
@@ -15,16 +15,12 @@ pitcher_start = datetime.datetime.now()- datetime.timedelta(days=11)
 pitcher_start = pitcher_start.strftime("%m/%d/%Y")
 
 
-#Detroit = 116
-#Toldeo = 512
-#Erie = 106
-
-reddit = praw.Reddit('bot1')
+# Teams we want to track are in the dictionary below.  First number is the teamID and the second is the sport ID.
+# You can find the IDs for all the teams here:  https://statsapi.mlb.com/api/v1/teams/  
 
 teams={"116":"1","512":"11","106":"12","582": "14","5071": "16","473":"16"}
-start_date="08/13/2019"
-#end_date="08/20/2019"
 
+#Gets the team name fromthe ID
 
 def get_team(teamID):
     team = "https://statsapi.mlb.com/api/v1/teams/"+teamID
@@ -33,6 +29,7 @@ def get_team(teamID):
     team_name = data['teams'][0]['name']
     return team_name
 
+#gets a list of all the hitters and their playerID on a team
 
 def get_hitters(teamId):
     team_roster = "https://statsapi.mlb.com/api/v1/teams/"+teamId+"/roster"
@@ -44,6 +41,8 @@ def get_hitters(teamId):
           hitters.update({x['person']['id']:x['person']['fullName']})
     return(hitters)
 
+#gets a list of all the pitchers and their playerID on a team
+
 def get_pitchers(teamId):
     team_roster = "https://statsapi.mlb.com/api/v1/teams/"+teamId+"/roster"
     r = requests.get(team_roster)
@@ -53,6 +52,8 @@ def get_pitchers(teamId):
         if (x['position']['name'] == "Pitcher"):
           pitchers.update({x['person']['id']:x['person']['fullName']})
     return(pitchers)
+
+#runs through the dict of hitters and adds the 'hot' ones to a new dict
 
 def get_hot_hit(players,sport):
     hot_hitters={}
@@ -76,6 +77,8 @@ def get_hot_hit(players,sport):
                 nostats = "This player doesn't have any stats for this period"     
     return(hot_hitters)
 
+#runs through the dict of pitchers and adds the 'hot' ones to a new dict
+
 def get_hot_pitch(players,sport):
     hot_pitchers={}
     for player in players:
@@ -97,45 +100,37 @@ def get_hot_pitch(players,sport):
     return(hot_pitchers)
 
 
+# Loop through the teams list, find all their players, and then find the hot ones
 
-message="#HOT \n"  
+selftext="#HOT \n"  
     
-
-
 for t,s in teams.items():
     current_team = get_team(t)
-    message = message + "###" + current_team + "\n\n"
-    message = message + "\n\n"
-    message = message + "Name | PA | H | HR | RBI | AVG | OPS" + "\n"
-    message = message + "-----|-----|-----|-----|-----|-----|-----" + "\n"
+    selftext = selftext + "###" + current_team + "\n\n"
+    selftext = selftext + "\n\n"
+    selftext = selftext + "Name | PA | H | HR | RBI | AVG | OPS" + "\n"
+    selftext = selftext + "-----|-----|-----|-----|-----|-----|-----" + "\n"
    
     hitters = get_hitters(t)
-
     pitchers=get_pitchers(t)
 
     hot_hit= get_hot_hit(hitters,s)
     hot_pit= get_hot_pitch(pitchers,s)
-    #pprint(hot_hit)
-
+  
     for h in hot_hit:
-        message = message + h + "|" + str(hot_hit[h]['pa']) + "|" + str(hot_hit[h]['hits']) + "|" + str(hot_hit[h]['hr']) + "|" + str(hot_hit[h]['rbi']) + "|" + str(hot_hit[h]['avg']) + "|" + str(hot_hit[h]['ops']) + "\n"
-    message = message + "\n\n"
-    message = message + "Name | IP | ERA | WHIP | K/9" + "\n"
-    message = message + "-----|-----|-----|-----|-----" + "\n"
+        selftext = selftext + h + "|" + str(hot_hit[h]['pa']) + "|" + str(hot_hit[h]['hits']) + "|" + str(hot_hit[h]['hr']) + "|" + str(hot_hit[h]['rbi']) + "|" + str(hot_hit[h]['avg']) + "|" + str(hot_hit[h]['ops']) + "\n"
+
+    selftext = selftext + "\n\n"
+    selftext = selftext + "Name | IP | ERA | WHIP | K/9" + "\n"
+    selftext = selftext + "-----|-----|-----|-----|-----" + "\n"
 
     for p in hot_pit:
-        message = message + p +  "|" + str(hot_pit[p]['ip']) +  "|" + str(hot_pit[p]['era']) +  "|" + str(hot_pit[p]['whip']) +  "|" + str(hot_pit[p]['k9']) +  "\n"
+        selftext = selftext + p +  "|" + str(hot_pit[p]['ip']) +  "|" + str(hot_pit[p]['era']) +  "|" + str(hot_pit[p]['whip']) +  "|" + str(hot_pit[p]['k9']) +  "\n"
         
-        
 
+#initialise PRAW Reddit instance and post the message
 
-    
-    #print(hot_pit)
-
-
-print(message)
-    #pprint(hot_pit)
-title = 'Weekly Tigers Hot or Not'
-selftext = message
+reddit = praw.Reddit('bot1')
+title = 'Tigers On A Hot Streak  ' + end_date
+selftext = selftext
 reddit.subreddit('Tigershotbot').submit(title, selftext)
-#print(hitter_start)
