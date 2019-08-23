@@ -71,8 +71,9 @@ def get_cold_hit(players,sport):
                 hr = hitter['stats'][0]['splits'][1]['stat']['homeRuns']
                 rbi = hitter['stats'][0]['splits'][1]['stat']['rbi']
                 if (float(ops) < .500 or float(avg) < .200) and (float(pa) > 14):
-                    #print(hitter['fullName'],pa,hits,hr,rbi,avg,ops) 
-                    cold_hitters.update({hitter['fullName'] :{"pa":pa,"hits":hits,"hr":hr,"rbi":rbi,"avg":avg,"ops":ops}}) 
+                    #print(hitter['fullName'],pa,hits,hr,rbi,avg,ops)
+                    name = "^" +  hitter['useName'] + " ^" + hitter['lastName']
+                    cold_hitters.update({name:{"pa":pa,"hits":hits,"hr":hr,"rbi":rbi,"avg":avg,"ops":ops}}) 
             except:
                 nostats = "This player doesn't have any stats for this period"     
     return(cold_hitters)
@@ -94,6 +95,7 @@ def get_cold_pitch(players,sport):
                 k9 = pitcher['stats'][0]['splits'][1]['stat']['strikeoutsPer9Inn']
                 if float(era) > 6 and float(ip) >= 4:
                     #print(hitter['fullName'],pa,hits,hr,rbi,avg,ops) 
+                    name = "^" +  hitter['useName'] + " ^" + hitter['lastName']
                     cold_pitchers.update({pitcher['fullName'] :{"ip":ip,"era":era,"whip":whip,"k9":k9}}) 
             except:
                 nostats = "This player doesn't have any stats for this period"     
@@ -121,7 +123,7 @@ for t,s in teams.items():
 
   
     for h in cold_hit:
-        selftext = selftext + h + "|" + str(cold_hit[h]['pa']) + "|" + str(cold_hit[h]['hits']) + "|" + str(cold_hit[h]['hr']) + "|" + str(cold_hit[h]['rbi']) + "|" + str(cold_hit[h]['avg']) + "|" + str(cold_hit[h]['ops']) + "\n"
+        selftext = selftext + h + "|^" + str(cold_hit[h]['pa']) + "|^" + str(cold_hit[h]['hits']) + "|^" + str(cold_hit[h]['hr']) + "|^" + str(cold_hit[h]['rbi']) + "|^" + str(cold_hit[h]['avg']) + "|^" + str(cold_hit[h]['ops']) + "\n"
 
     selftext = selftext + "\n\n"
     if len(cold_pit) > 0:
@@ -129,7 +131,7 @@ for t,s in teams.items():
         selftext = selftext + "-----|-----|-----|-----|-----" + "\n"
 
     for p in cold_pit:
-        selftext = selftext + p +  "|" + str(cold_pit[p]['ip']) +  "|" + str(cold_pit[p]['era']) +  "|" + str(cold_pit[p]['whip']) +  "|" + str(cold_pit[p]['k9']) +  "\n"
+        selftext = selftext + p +  "|^" + str(cold_pit[p]['ip']) +  "|^" + str(cold_pit[p]['era']) +  "|^" + str(cold_pit[p]['whip']) +  "|^" + str(cold_pit[p]['k9']) +  "\n"
         
 
 #initialise PRAW Reddit instance and post the message

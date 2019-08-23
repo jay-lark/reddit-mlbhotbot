@@ -71,8 +71,9 @@ def get_hot_hit(players,sport):
                 hr = hitter['stats'][0]['splits'][1]['stat']['homeRuns']
                 rbi = hitter['stats'][0]['splits'][1]['stat']['rbi']
                 if (float(ops) > .850 or float(avg) > .320) and (float(pa) > 14):
-                    #print(hitter['fullName'],pa,hits,hr,rbi,avg,ops) 
-                    hot_hitters.update({hitter['fullName'] :{"pa":pa,"hits":hits,"hr":hr,"rbi":rbi,"avg":avg,"ops":ops}}) 
+                    #print(hitter['fullName'],pa,hits,hr,rbi,avg,ops)
+                    name = "^" +  hitter['useName'] + " ^" + hitter['lastName'] 
+                    hot_hitters.update({name :{"pa":pa,"hits":hits,"hr":hr,"rbi":rbi,"avg":avg,"ops":ops}}) 
             except:
                 nostats = "This player doesn't have any stats for this period"     
     return(hot_hitters)
@@ -93,10 +94,11 @@ def get_hot_pitch(players,sport):
                 whip =  pitcher['stats'][0]['splits'][1]['stat']['whip']
                 k9 = pitcher['stats'][0]['splits'][1]['stat']['strikeoutsPer9Inn']
                 if float(era) < 3 and float(ip) >= 5:
-                    #print(hitter['fullName'],pa,hits,hr,rbi,avg,ops) 
-                    hot_pitchers.update({pitcher['fullName'] :{"ip":ip,"era":era,"whip":whip,"k9":k9}}) 
+                    #print(hitter['fullName'],pa,hits,hr,rbi,avg,ops)
+                    name = "^" +  pitcher['useName'] + " ^" + pitcher['lastName'] 
+                    hot_pitchers.update({name :{"ip":ip,"era":era,"whip":whip,"k9":k9}}) 
             except:
-                nostats = "This player doesn't have any stats for this period"     
+                nostats = "This player doesn't have any stats for this period"    
     return(hot_pitchers)
 
 
@@ -113,7 +115,7 @@ for t,s in teams.items():
     selftext = selftext + "###" + current_team + "\n\n"
     selftext = selftext + "\n\n"
     if len(hot_hit) > 0:
-      selftext = selftext + "Name | PA | H | HR | RBI | AVG | OPS" + "\n"
+      selftext = selftext + "^Name | ^PA | ^H | ^HR | ^RBI | ^AVG | ^OPS" + "\n"
       selftext = selftext + "-----|-----|-----|-----|-----|-----|-----" + "\n"
    
 
@@ -121,7 +123,7 @@ for t,s in teams.items():
 
   
     for h in hot_hit:
-        selftext = selftext + h + "|" + str(hot_hit[h]['pa']) + "|" + str(hot_hit[h]['hits']) + "|" + str(hot_hit[h]['hr']) + "|" + str(hot_hit[h]['rbi']) + "|" + str(hot_hit[h]['avg']) + "|" + str(hot_hit[h]['ops']) + "\n"
+        selftext = selftext + h + "|^" + str(hot_hit[h]['pa']) + "|^" + str(hot_hit[h]['hits']) + "|^" + str(hot_hit[h]['hr']) + "|^" + str(hot_hit[h]['rbi']) + "|^" + str(hot_hit[h]['avg']) + "|^" + str(hot_hit[h]['ops']) + "\n"
 
     selftext = selftext + "\n\n"
     if len(hot_pit) > 0:
@@ -129,12 +131,12 @@ for t,s in teams.items():
         selftext = selftext + "-----|-----|-----|-----|-----" + "\n"
 
     for p in hot_pit:
-        selftext = selftext + p +  "|" + str(hot_pit[p]['ip']) +  "|" + str(hot_pit[p]['era']) +  "|" + str(hot_pit[p]['whip']) +  "|" + str(hot_pit[p]['k9']) +  "\n"
+        selftext = selftext + p +  "|^" + str(hot_pit[p]['ip']) +  "|^" + str(hot_pit[p]['era']) +  "|^" + str(hot_pit[p]['whip']) +  "|^" + str(hot_pit[p]['k9']) +  "\n"
         
 
 #initialise PRAW Reddit instance and post the message
 
 reddit = praw.Reddit('bot1')
-title = 'Tigers On A Hot Streak  ' + end_date
+title = 'Weekly Hot Tigers Thread  ' + end_date
 selftext = selftext
 reddit.subreddit('Tigershotbot').submit(title, selftext)
