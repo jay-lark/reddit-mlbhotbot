@@ -20,5 +20,13 @@ Install and configure PRAW, a Python wrapper for the Reddit API. https://praw.re
 
 **teams**  This is a dictionary of the teams to look at.  The key is the teamID while the value is the sportID.  Team and sport IDs can be found by searching the MLB API output at this URL:  https://statsapi.mlb.com/api/v1/teams/
 
+If a batter hits over the following values, they will be considered 'hot':  
+**hot_avg** 
+**hot_ops** 
+**hot_pa** 
 
+If a pitcher has an era under **hot_era** and has pitched at least the number of innings in **hot_ip** they will be considered 'hot.'
 
+**title**  The title of the Reddit post.
+
+**hot_subreddit**  The subreddit to post to.

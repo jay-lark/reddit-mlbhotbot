@@ -20,6 +20,18 @@ pitcher_start = pitcher_start.strftime("%m/%d/%Y")
 
 teams={"116":"1","512":"11","106":"12","582": "14","5071": "16","473":"16"}
 
+#cold_variables
+cold_avg = .200
+cold_ops = .500
+cold_pa = 14
+
+cold_era = 6
+cold_ip = 4
+
+#reddit post variables
+title = 'Weekly Cold Tigers Thread  ' + end_date
+cold_subreddit = 'Tigershotbot'
+
 #Gets the team name fromthe ID
 
 def get_team(teamID):
@@ -70,7 +82,7 @@ def get_cold_hit(players,sport):
                 hits = hitter['stats'][0]['splits'][1]['stat']['hits']
                 hr = hitter['stats'][0]['splits'][1]['stat']['homeRuns']
                 rbi = hitter['stats'][0]['splits'][1]['stat']['rbi']
-                if (float(ops) < .500 or float(avg) < .200) and (float(pa) > 14):
+                if (float(ops) < cold_ops or float(avg) < cold_avg) and (float(pa) > cold_pa):
                     #print(hitter['fullName'],pa,hits,hr,rbi,avg,ops)
                     name = "^" +  hitter['useName'] + " ^" + hitter['lastName']
                     cold_hitters.update({name:{"pa":pa,"hits":hits,"hr":hr,"rbi":rbi,"avg":avg,"ops":ops}}) 
@@ -93,9 +105,9 @@ def get_cold_pitch(players,sport):
                 ip = pitcher['stats'][0]['splits'][1]['stat']['inningsPitched']
                 whip =  pitcher['stats'][0]['splits'][1]['stat']['whip']
                 k9 = pitcher['stats'][0]['splits'][1]['stat']['strikeoutsPer9Inn']
-                if float(era) > 6 and float(ip) >= 4:
-                    #print(hitter['fullName'],pa,hits,hr,rbi,avg,ops) 
-                    name = "^" +  hitter['useName'] + " ^" + hitter['lastName']
+                if (float(era) > float(cold_era) and float(ip) >= float(cold_ip)):
+                    #print(pitcher['useName'],float(era),float(cold_era)) 
+                    name = "^" +  pitcher['useName'] + " ^" + pitcher['lastName']
                     cold_pitchers.update({pitcher['fullName'] :{"ip":ip,"era":era,"whip":whip,"k9":k9}}) 
             except:
                 nostats = "This player doesn't have any stats for this period"     
@@ -137,6 +149,5 @@ for t,s in teams.items():
 #initialise PRAW Reddit instance and post the message
 
 reddit = praw.Reddit('bot1')
-title = 'Weekly Tigers In A Slump Thread ' + end_date
 selftext = selftext
-reddit.subreddit('Tigershotbot').submit(title, selftext)
+reddit.subreddit(cold_subreddit).submit(title, selftext)

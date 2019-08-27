@@ -20,6 +20,19 @@ pitcher_start = pitcher_start.strftime("%m/%d/%Y")
 
 teams={"116":"1","512":"11","106":"12","582": "14","5071": "16","473":"16"}
 
+
+#hot_variables
+hot_avg = .320
+hot_ops = .850
+hot_pa = 14
+
+hot_era = 3
+hot_ip = 5
+
+#reddit post variables
+title = 'Weekly Hot Tigers Thread  ' + end_date
+hot_subreddit = 'Tigershotbot'
+
 #Gets the team name fromthe ID
 
 def get_team(teamID):
@@ -70,7 +83,7 @@ def get_hot_hit(players,sport):
                 hits = hitter['stats'][0]['splits'][1]['stat']['hits']
                 hr = hitter['stats'][0]['splits'][1]['stat']['homeRuns']
                 rbi = hitter['stats'][0]['splits'][1]['stat']['rbi']
-                if (float(ops) > .850 or float(avg) > .320) and (float(pa) > 14):
+                if (float(ops) > hot_ops or float(avg) > hot_avg) and (float(pa) > hot_pa):
                     #print(hitter['fullName'],pa,hits,hr,rbi,avg,ops)
                     name = "^" +  hitter['useName'] + " ^" + hitter['lastName'] 
                     hot_hitters.update({name :{"pa":pa,"hits":hits,"hr":hr,"rbi":rbi,"avg":avg,"ops":ops}}) 
@@ -93,7 +106,7 @@ def get_hot_pitch(players,sport):
                 ip = pitcher['stats'][0]['splits'][1]['stat']['inningsPitched']
                 whip =  pitcher['stats'][0]['splits'][1]['stat']['whip']
                 k9 = pitcher['stats'][0]['splits'][1]['stat']['strikeoutsPer9Inn']
-                if float(era) < 3 and float(ip) >= 5:
+                if (float(era) < hot_era and float(ip) >= hot_ip):
                     #print(hitter['fullName'],pa,hits,hr,rbi,avg,ops)
                     name = "^" +  pitcher['useName'] + " ^" + pitcher['lastName'] 
                     hot_pitchers.update({name :{"ip":ip,"era":era,"whip":whip,"k9":k9}}) 
@@ -137,6 +150,5 @@ for t,s in teams.items():
 #initialise PRAW Reddit instance and post the message
 
 reddit = praw.Reddit('bot1')
-title = 'Weekly Hot Tigers Thread  ' + end_date
 selftext = selftext
-reddit.subreddit('motorcitykitties').submit(title, selftext)
+reddit.subreddit(hot_subreddit).submit(title, selftext)
