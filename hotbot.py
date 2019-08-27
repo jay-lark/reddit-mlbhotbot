@@ -139,4 +139,4 @@ for t,s in teams.items():
 reddit = praw.Reddit('bot1')
 title = 'Weekly Hot Tigers Thread  ' + end_date
 selftext = selftext
-reddit.subreddit('Tigershotbot').submit(title, selftext)
+reddit.subreddit('motorcitykitties').submit(title, selftext)
