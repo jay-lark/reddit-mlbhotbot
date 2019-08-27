@@ -14,6 +14,9 @@ To use the Reddit API you need to register your application to get your appi ID 
 Install and configure PRAW, a Python wrapper for the Reddit API. https://praw.readthedocs.io/en/latest/getting_started/configuration.html
 
 ## Configuration
+Modify the following variables at the top of the file to adjust the play evaluation criteria:
+
+
 **hitter_start** By default the script will look at the last 7 days for hitters.  Adjust the time frame in this variable
 
 **pitcher_start** By default the script will look at the last 11 days for pitchers.  Adjust the time frame in this variable
