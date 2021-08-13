@@ -33,3 +33,6 @@ If a pitcher has an era under **hot_era** and has pitched at least the number of
 **title**  The title of the Reddit post.
 
 **hot_subreddit**  The subreddit to post to.
+
+## ToDo
+Add requirements.txt
