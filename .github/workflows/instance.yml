@@ -21,4 +21,5 @@ jobs:
         run: |
           sudo apt-get install -y libmysqlclient-dev
           python -m pip install --upgrade pip
+          pip --version
           if [ -f requirements/requirements.txt ]; then python -m pip install -r requirements/requirements.txt; fi
