@@ -20,6 +20,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get install -y libmysqlclient-dev
+          sudo ln -s /usr/include/mysql/mysql.h /usr/include/mysql/my_config.h
           python -m pip install --upgrade pip
           if [ -f requirements/requirements.txt ]; then python -m pip install -r requirements/requirements.txt; fi
           if [ -f requirements/requirements-node.txt ]; then python -m pip install -r requirements/requirements-node.txt; fi
